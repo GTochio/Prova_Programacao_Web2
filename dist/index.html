@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
+        integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <title>Churrascômetro</title>
+    CURSO: Tecnologia em Análise e Desenvolvimentos de Sistemas
+    DISCIPLINA: Programação para WEB2
+    PROFESSOR: JAIME R. VENDRAME FILHO
+    DATA: 15/04/2020 1º Bimestre
+    VALOR DA AVALIAÇÃO: 7,0
+    ACADÊMICO (A): GABRIEL FERNANDO TOCHIO
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="text-center">Churrascômetro</h1>
+        <div class="row">
+            <div class="col-6">æ
+                <div class="form-group">
+                    <input type="text" id="homens" class="form-control form-control-sm"
+                        placeholder="Quantidade de Homens">
+                </div>
+                <div class="form-group">
+                    <input type="text" id="mulheres" class="form-control form-control-sm"
+                        placeholder="Quantidade de Mulheres">
+                </div>
+                <div class="form-group">
+                    <input type="text" id="criancas" class="form-control form-control-sm"
+                        placeholder="Quantidade de Crianças">
+                </div>
+                <div class="form-group">
+                    <button id="botao" class="btn btn-outline-dark btn-block">
+                        Calcular
+                    </button>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="">
+                    <ul class="list-group" id="lista"></ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script>
+        window.onload = () => {
+            const lista = document.querySelector('#lista')
+            const botao = document.querySelector('#botao')
+
+            botao.addEventListener('click', read)
+        }
+        function read() {
+            lista.innerHTML = ""
+            //chamada ajax na rota /read
+            axios.get('/read')
+                .then((response) => {
+                    // console.log(response);
+                    response.data.forEach(el => {
+                        lista.innerHTML += templateLi(el.id, el.item, el.qtd_man, el.qtd_wman,
+                            el.qtd_child)
+                    })
+                })
+                .catch((error) => {
+                    console.log(error);
+                })
+        }
+        function templateLi(id, item, qtd_man, qtd_wman, qtd_child) {
+            return `
+ <li class="list-group-item d-flex justify-content-between align-itemscenter">${item}
+ <span class="badge badge-primary badge-pill">
+ ${calcular(qtd_man, qtd_wman, qtd_child)} kg
+ </span>
+ </li>
+ `
+        }
+        function calcular(h, m, c) {
+            const qtd_homens = document.querySelector('#homens')
+            const qtd_mulheres = document.querySelector('#mulheres')
+            const qtd_criancas = document.querySelector('#criancas')
+            const homens = qtd_homens.value
+            const mulheres = qtd_mulheres.value
+            const criancas = qtd_criancas.value
+            const total = (h * homens) + (m * mulheres) + (c * criancas)
+            return total
+        }
+    </script>
+</body>
+
+</html>
